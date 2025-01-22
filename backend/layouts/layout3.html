@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .header {
+      background-color: #b2d2f1;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+    .content {
+      padding: 20px;
+      color: #555;
+      line-height: 1.6;
+    }
+    .footer {
+      background-color: #e9ecef;
+      text-align: center;
+      padding: 10px;
+      font-size: 12px;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>{{title}}</h1>
+    </div>
+    <div class="content">
+      <p>{{content}}</p>
+    </div>
+    <div class="footer">
+      {{footer}}
+    </div>
+  </div>
+</body>
+</html>

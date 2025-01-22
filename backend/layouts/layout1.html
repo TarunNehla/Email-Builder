@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .header input[type="text"],
+  .footer input[type="text"] {
+    width: calc(100% - 20px);
+    padding: 8px;
+    margin: 5px 0;
+    border: none;
+    background: transparent;
+    font-size: 24px; 
+    text-align: center; 
+  }
+
+  .footer input[type="text"] {
+    font-size: 12px; 
+  }
+    .header {
+      background-color: #ede0b9;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+    .content {
+      padding: 20px;
+      color: #333;
+    }
+    .footer {
+      background-color: #f8f9fa;
+      text-align: center;
+      padding: 10px;
+      font-size: 12px;
+      color: #666;
+    }
+    .editable-area {
+      border: 1px dashed #ccc;
+      padding: 10px;
+      margin: 10px 0;
+    }
+    input[type="text"] {
+      width: calc(100% - 20px);
+      padding: 8px;
+      margin: 5px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <input
+        type="text"
+        id="title-input"
+        placeholder="Enter email title"
+      />
+    </div>
+    <div class="content">
+      <div class="editable-area" id="text-editor">
+      </div>
+      <div class="editable-area" id="image-uploader">
+      </div>
+    </div>
+    <div class="footer">
+      <input
+        type="text"
+        id="footer-input"
+        placeholder="Enter footer text"
+      />
+    </div>
+  </div>
+</body>
+</html>

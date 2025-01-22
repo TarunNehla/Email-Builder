@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .header {
+      background-color: #b5f0c3;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+    .content {
+      padding: 20px;
+      color: #333;
+    }
+    .product {
+      border: 1px solid #ddd;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    .footer {
+      background-color: #f8f9fa;
+      text-align: center;
+      padding: 10px;
+      font-size: 12px;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>{{title}}</h1>
+    </div>
+    <div class="content">
+      <div class="product">
+        <h2>Dummy</h2>
+        <p>{{content}}</p>
+        <img src="{{imageUrl}}" alt="Dummy" style="max-width: 100%; height: auto;" />
+      </div>
+    </div>
+    <div class="footer">
+      {{footer}}
+    </div>
+  </div>
+</body>
+</html>
