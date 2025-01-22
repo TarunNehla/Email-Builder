@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import '../App.css';
 
-const BASE_URL = process.env.BASE_URL;
+const BASE_URL = '/api';
 
 const ImageUploader = ({ onUpload }) => {
   const [image, setImage] = useState(null);

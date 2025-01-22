@@ -1,5 +1,5 @@
 import axios from "axios";
-const BASE_URL = process.env.BASE_URL;
+const BASE_URL = '/api';
 
 export const saveTemplate = (templateId, selectedTemplate, configData, title, footer) => {
     if (!templateId || !selectedTemplate) {

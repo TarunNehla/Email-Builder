@@ -6,7 +6,7 @@ import ImageUploader from "./imageUploader";
 import { renderAndDownloadTemplate } from "../utils/downloadTemplate";
 import { saveTemplate } from "../utils/saveTemplate";
 
-const BASE_URL = process.env.BASE_URL;
+const BASE_URL = '/api';
 
 const EmailEditor = () => {
   const [selectedTemplate, setSelectedTemplate] = useState(""); 
