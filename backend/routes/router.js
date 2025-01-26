@@ -16,29 +16,48 @@ const storage = multer.diskStorage({
     }
 });
 
-const upload = multer({ storage: storage });
+const upload = multer({
+  limits: {
+      fileSize: 1 * 1024 * 1024, 
+  },
+});
+
+router.get('/images/:id', async (req, res) => {
+  try {
+      const image = await imageModel.findById(req.params.id);
+      if (!image) {
+          return res.status(404).send('Image not found.');
+      }
+
+      res.set('Content-Type', 'image/png');
+      res.send(image.imageData);
+  } catch (error) {
+      console.error('Error fetching image:', error);
+      res.status(500).send('Error fetching image.');
+  }
+});
 
 router.post('/uploadImage', upload.single('image'), async (req, res) => {
-    try {
-        const newImage = new imageModel({
-            imageUrl: `/uploads/${req.file.filename}`
-        });
+  try {
+      const file = req.file;
+      if (!file) {
+          return res.status(400).send('No file uploaded.');
+      }
 
-        await newImage.save();
+      const image = new imageModel({
+          imageUrl: file.originalname,
+          imageData: file.buffer,
+      });
 
-        res.status(200).json({
-            success: true,
-            message: 'Image uploaded successfully',
-            imageUrl: newImage.imageUrl
-        });
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: 'Image upload failed',
-            error: error.message
-        });
-    }
+      await image.save();
+      const imageUrl = `${req.protocol}://${req.get('host')}/images/${image._id}`;
+      res.status(200).send({ imageUrl: imageUrl });
+  } catch (error) {
+      console.error('Error uploading image:', error);
+      res.status(500).send('Error uploading image.');
+  }
 });
+
 
 router.get('/getEmailLayout', (req, res) => {
     const layoutId = req.query.layout; 
@@ -86,50 +105,41 @@ router.post('/uploadEmailConfig', async (req, res) => {
 });
 
 router.post('/renderAndDownloadTemplate', async (req, res) => {
-  const { templateId, values, editorContent, title, footer, imageUrl } = req.body;
-  console.log('imageUrl : ', imageUrl);
-  if (!templateId || !values || !editorContent) {
-    return res.status(400).json({ error: 'templateId, values, and editorContent are required.' });
-  }
-
-  try {
-    const layoutPath = path.join(__dirname, '..', 'layouts/forDownload', `${templateId}.html`);
-
-    if (!fs.existsSync(layoutPath)) {
-      return res.status(404).json({ error: 'Template not found.' });
+    const { templateId, values, editorContent, title, footer, imageUrl } = req.body;
+    console.log('imageUrl : ', imageUrl);
+    if (!templateId || !values || !editorContent) {
+      return res.status(400).json({ error: 'templateId, values, and editorContent are required.' });
     }
-
-    const layoutHtml = fs.readFileSync(layoutPath, 'utf-8');
-
-    const customizedHtml = layoutHtml
-      .replace('{{Title}}', title || 'Default Title')
-      .replace('{{content}}', editorContent || '')
-      .replace('{{footer}}', footer || '')
-      .replace('{{image}}', imageUrl ? `<img src="../${imageUrl}" alt="Image"/>` : '');
-
-    const downloadsDir = path.join(__dirname, '..', 'downloads');
-
-    if (!fs.existsSync(downloadsDir)) {
-      fs.mkdirSync(downloadsDir);
-    }
-
-    const filePath = path.join(downloadsDir, `${templateId}_customized.html`);
-
-    fs.writeFileSync(filePath, customizedHtml);
-
-    res.download(filePath, `${templateId}_customized.html`, (err) => {
-      if (err) {
-        console.error('Error sending file:', err);
-        return res.status(500).json({ error: 'Failed to download file.' });
+  
+    try {
+      const layoutPath = path.join(__dirname, '..', 'layouts/forDownload', `${templateId}.html`);
+  
+      if (!fs.existsSync(layoutPath)) {
+        return res.status(404).json({ error: 'Template not found.' });
       }
-
-      fs.unlinkSync(filePath);
-    });
-  } catch (error) {
-    console.error('Error rendering and downloading template:', error);
-    res.status(500).json({ error: 'Failed to render and download template.', message: error.message });
-  }
-});
+  
+      const imageId = imageUrl.split('/').pop();
+  
+      const image = await imageModel.findById(imageId);
+      if (!image) {
+        return res.status(404).json({ error: 'Image not found.' });
+      }
+  
+      let template = fs.readFileSync(layoutPath, 'utf8');
+  
+      template = template.replace('{{Title}}', title);
+      template = template.replace('{{content}}', editorContent);
+      template = template.replace('{{footer}}', footer);
+    template = template.replace('{{image}}', `<img src="data:image/png;base64,${image.imageData.toString('base64')}" alt="Logo" style="width: 150px; height: auto; object-fit: contain;" />`);
+  
+      res.setHeader('Content-Disposition', `attachment; filename=${templateId}_customized.html`);
+      res.setHeader('Content-Type', 'text/html');
+      res.send(template);
+    } catch (error) {
+      console.error('Error rendering and downloading template:', error);
+      res.status(500).json({ error: 'Failed to render and download template.', error: error.message });
+    }
+  });
 
 
 
